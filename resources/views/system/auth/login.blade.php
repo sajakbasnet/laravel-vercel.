@@ -15,7 +15,7 @@
                 <div class="main-signin-header">
                     <h2>Seja Bem Vindo!</h2>
                     <h4>Por favor, insira seus dados para entrar.</h4>
-                    <form id="" method="post" action="{{ route('login') }}">                       
+                    <form id="" method="post" action="{{ route('login') }}">
                         @if(!$errors->isEmpty())
                         <div class="alert alert-danger" role="alert">
                             {{$errors->first()}}
@@ -34,6 +34,11 @@
                             <label>Password</label>
                             <input autocomplete="current-password" name="password" id="senha-user-dog" class="form-control" placeholder="Enter your password" type="password">
                         </div>
+                        <!-- @if(auth()->user() && auth()->user()->google2fa_enabled)
+                        <p>Two-factor authentication is enabled for your account.</p>
+                        <p>Please enter your 2FA token to continue:</p>
+                        <input type="text" class="form-control" name="token" required>
+                        @endif -->
                         <div class="actions__container">
                             <button class="btn btn-main-primary btn-block" type="submit">Login</button>
                             <div id="buttonDiv"></div>

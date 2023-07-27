@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Config;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use ParagonIE\ConstantTime\Base32;
 
 class LoginController extends Controller
-{   
-  
+{
+    protected $redirectTo = '/home';
+
     public function showLoginForm()
     {
         return view('system.auth.login');
     }
-  
+
+
     public function login(Request $request)
     {
         $this->validateLogin($request);
@@ -28,22 +31,40 @@ class LoginController extends Controller
 
                 return $this->customLockoutResponse($request);
             }
-            $user = $this->loginType($request);            
+            $user = $this->loginType($request);
             if (Auth::attempt($user)) {
-                // Authentication passed
-                return redirect('/home'); // Replace '/home' with the actual URL for your home page
-            }
-    
-            // Authentication failed, redirect back to the login form with an error message
-            return redirect()->route('login')->withErrors(['alert-danger' => 'Invalid Credentials!']);       
 
-            
-        } catch (\Exception $e) {                     
+
+                $user = Auth::guard()->user();
+                $data['secret'] = $this->generateSecret();
+
+                //encrypt and then save secret.
+                $google2fa = app('pragmarx.google2fa');
+                if (!$user->google2fa_secret) {
+                    $user->google2fa_secret = $google2fa->generateSecretKey();
+                    $user->save();
+                }
+                //generate image for QR barcode
+                if ($user->google2fa_secret) {
+                    $data['imageDataUri'] = $google2fa->getQRCodeInline(
+                        config('app.name'),
+                        $user->email,
+                        $user->google2fa_secret
+                    );
+                }
+                $data['user'] = $user;
+                return view('system.auth.2fa-setup', $data);
+            }
+
+            // Authentication failed, redirect back to the login form with an error message
+            return redirect()->route('login')->withErrors(['alert-danger' => 'Invalid Credentials!']);
+        } catch (\Exception $e) {
             if (Auth::guard() != null) {
                 Auth::guard()->logout();
             }
         }
     }
+
     protected function validateLogin(Request $request)
     {
         $request->validate([
@@ -67,9 +88,18 @@ class LoginController extends Controller
             'password' => $request->get('password'),
         ];
     }
-   
+
+
+
+    private function generateSecret()
+    {
+        $randomBytes = random_bytes(10);
+
+        return Base32::encodeUpper($randomBytes);
+    }
+
     public function logout(Request $request)
-    {       
+    {
         Auth::guard()->logout();
         $request->session()->invalidate();
         return redirect('/login')->withErrors(['alert-success' => 'Successfully logged out!']);
