@@ -15,7 +15,7 @@
                 <div class="main-signin-header">
                     <h2>Seja Bem Vindo!</h2>
                     <h4>Por favor, insira seus dados para entrar.</h4>
-                    <form id="" method="post" action="{{ route('login') }}">
+                    <form id="" method="post" action="{{ route('login') }}">                       
                         @if(!$errors->isEmpty())
                         <div class="alert alert-danger" role="alert">
                             {{$errors->first()}}

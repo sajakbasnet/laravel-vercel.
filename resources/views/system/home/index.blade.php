@@ -234,7 +234,7 @@
                             <a class="dropdown-item" href><i class="far fa-edit"></i> Editar Perfil</a>
                             <a class="dropdown-item" href><i class="far fa-clock"></i> Registros de atividades</a>
                             <a class="dropdown-item" href><i class="fas fa-sliders-h"></i> Configuração da Conta</a>
-                            <a class="dropdown-item options-logout-user" href="login.html"><i class="fas fa-sign-out-alt"></i>Sair</a>
+                            <a class="dropdown-item options-logout-user" href="{{ route('logout') }}"><i class="fas fa-sign-out-alt"></i>Sair</a>
                         </div>
                     </div>
 

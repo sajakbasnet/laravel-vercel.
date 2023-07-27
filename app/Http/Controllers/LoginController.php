@@ -28,15 +28,19 @@ class LoginController extends Controller
 
                 return $this->customLockoutResponse($request);
             }
-            $user = $this->loginType($request);
+            $user = $this->loginType($request);            
+            if (Auth::attempt($user)) {
+                // Authentication passed
+                return redirect('/home'); // Replace '/home' with the actual URL for your home page
+            }
+    
+            // Authentication failed, redirect back to the login form with an error message
+            return redirect()->route('login')->withErrors(['alert-danger' => 'Invalid Credentials!']);       
 
-          
-
-            return $this->sendLoginResponse($request);
-        } catch (\Exception $e) {
-            dd($e);
-            if (Auth::user() != null) {
-                $this->guard()->logout();
+            
+        } catch (\Exception $e) {                     
+            if (Auth::guard() != null) {
+                Auth::guard()->logout();
             }
         }
     }
@@ -63,8 +67,11 @@ class LoginController extends Controller
             'password' => $request->get('password'),
         ];
     }
-    protected function sendLoginResponse(Request $request)
+   
+    public function logout(Request $request)
     {       
-        return redirect('/home');
+        Auth::guard()->logout();
+        $request->session()->invalidate();
+        return redirect('/login')->withErrors(['alert-success' => 'Successfully logged out!']);
     }
 }

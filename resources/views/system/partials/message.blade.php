@@ -2,7 +2,7 @@
 @foreach (['danger', 'warning', 'success', 'info'] as $msg)
 @if($errors->has('alert-' . $msg))
 <div class="alert alert-{{ $msg }} dark alert-dismissible fade show" role="alert">
-    <p>{{translate($errors->first('alert-' .$msg))}}
+    <p>{{$errors->first('alert-' .$msg)}}
         <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
     </p>
 </div>
