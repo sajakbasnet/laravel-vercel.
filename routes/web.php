@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 include 'backend.php';
+define('PREFIX', 'system');
