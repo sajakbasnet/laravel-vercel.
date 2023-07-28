@@ -1,28 +1,19 @@
 <?php
-// api/index.php - Serverless Function
 
-// Handler function that receives the event and context parameters
-function handler($event, $context) {
-    // Set the redirect URL to the login page
-    $redirectUrl = "/login";
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
-    // Set the response headers for the redirect
-    $response = array(
-        "statusCode" => 302, // 302 Found - Redirect
-        "headers" => array(
-            "Location" => $redirectUrl,
-        ),
-    );
-    return $response;
-}
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
 
-// Invoke the handler function with the provided event and context
-$event = json_decode($_ENV['VERCEL_EVENT'], true);
-$context = json_decode($_ENV['VERCEL_CONTEXT'], true);
-$result = handler($event, $context);
-
-// Output the response
-http_response_code($result['statusCode']);
-foreach ($result['headers'] as $key => $value) {
-    header("$key: $value");
-}
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
