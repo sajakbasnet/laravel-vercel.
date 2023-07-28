@@ -1,11 +1,3 @@
 <?php
 
-function handler()
-{
-    return array(
-        "statusCode" => 302,
-        "headers" => array(
-            "Location" => '/login',
-        ),
-    );
-}
+require __DIR__ . '/../public/index.php';
