@@ -1,14 +1,11 @@
 <?php
 
-function handler($event, $context)
+function handler()
 {
-
-    $redirectUrl = "/login";
-    $response = array(
+    return array(
         "statusCode" => 302,
         "headers" => array(
-            "Location" => $redirectUrl,
+            "Location" => '/login',
         ),
     );
-    return $response;
 }
