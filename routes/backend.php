@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\System\indexController;
-use App\Http\Controllers\TwoFactorController;
 
+Route::get('/', function () {
+    return redirect(route('login.form'));
+});
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout',  [LoginController::class, 'logout'])->name('logout');
